@@ -155,6 +155,11 @@
   export let __scrollTop = 0; // DO NOT MODIFY DIRECTLY. The scrollTop position of the scrollable area
   export let __scrollLeft = 0; // DO NOT MODIFY DIRECTLY. The scrollLeft position of the scrollable area
   export let __scrolledAllTheWayToTheRight = false; // DO NOT MODIFY DIRECTLY. Whether the container is scrolled all the way to the right as of the last onscroll event
+  export let threshold = 0;
+  export let horizontal = false;
+  export let hasMore = true;
+  let isLoadMore = false;
+
 
   onMount(() => {
     editHistory = new EditHistory(rows);
@@ -592,7 +597,7 @@
   /**
    * Sets updated scroll values when the scrollable area is scrolled
    */
-  function onScroll() {
+  function onScroll(e) {
     // get new scroll values from the scroll area
     const { scrollTop: newScrollTop, scrollLeft: newScrollLeft } = tableSpace;
 
@@ -611,6 +616,21 @@
     __scrolledAllTheWayToTheRight =
       Math.ceil(tableSpace.scrollWidth - tableSpace.scrollLeft) ===
       tableSpace.clientWidth;
+
+
+    //evaluates if the event is executed to load more data
+    const offset = horizontal? e.target.scrollWidth - e.target.clientWidth - e.target.scrollLeft
+                               : e.target.scrollHeight - e.target.clientHeight - e.target.scrollTop;
+
+    if (offset <= threshold) { 
+      if (!isLoadMore && hasMore) { 
+        dispatch("loadMore"); 
+      }
+      isLoadMore = true;
+    } else {
+      isLoadMore = false;
+    }
+    
   }
 
   /**
