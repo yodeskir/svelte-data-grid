@@ -9,6 +9,8 @@
 
   let wrapper;
   let tableSpace;
+  let AllowScroll=true
+  let ScrollRows=0
 
   /**
    * Computes the 'left' value for a grid-cell.
@@ -158,8 +160,12 @@
   export let threshold = 0;
   export let horizontal = false;
   export let hasMore = true;
-  let isLoadMore = false;
+  export let EnableCursor = false;
 
+
+  let isLoadMore = false;
+  let CurrentSelectedRow = 0
+  let lastScrollTop =0
 
   onMount(() => {
     editHistory = new EditHistory(rows);
@@ -621,7 +627,7 @@
     //evaluates if the event is executed to load more data
     const offset = horizontal? e.target.scrollWidth - e.target.clientWidth - e.target.scrollLeft
                                : e.target.scrollHeight - e.target.clientHeight - e.target.scrollTop;
-
+  
     if (offset <= threshold) { 
       if (!isLoadMore && hasMore) { 
         dispatch("loadMore"); 
@@ -631,6 +637,47 @@
       isLoadMore = false;
     }
     
+  }
+
+  function mousewheel(event){
+
+    if(EnableCursor){
+
+      let Direction = Math.sign(event.deltaY);
+      const last=CurrentSelectedRow
+      if(!Direction){
+        Direction=(event.detail>0)?1:0
+      }
+
+      if (Direction===1){
+        // upscroll code
+        if(rows.length-1>=CurrentSelectedRow+1){
+            CurrentSelectedRow++
+        }
+
+      } else {
+          // upscroll code
+          if(CurrentSelectedRow-1>=0){
+            CurrentSelectedRow--
+          }
+      }
+      
+      if(last!==CurrentSelectedRow){
+        dispatch("changecursor",{CurrentSelectedRow});
+      }
+
+      const GridContainer= event.target.offsetParent.offsetParent.offsetParent
+      
+      if(Direction===1 && CurrentSelectedRow < rows.length){
+        GridContainer.scrollTop+=rowHeight
+      }else {
+        GridContainer.scrollTop-=(rowHeight)
+      }
+
+      event.preventDefault()
+
+    }
+
   }
 
   /**
@@ -753,6 +800,23 @@
   };
 
   // const getCellLeft =getCellLeft
+  /**
+   * onclickrow
+  */
+
+  const onClickRow = (event) =>{
+    
+    const Sender= event.target.offsetParent.offsetParent
+    const index = Sender.getAttribute('rownumber');
+    dispatch("clickrow",{index}); 
+  
+    if(EnableCursor){
+      CurrentSelectedRow=parseInt(index,10)
+      dispatch("changecursor",{CurrentSelectedRow});
+    }
+    
+  }
+
 </script>
 
 <style>
@@ -904,6 +968,13 @@
   .grid-cell:not(:last-child) {
     border-right: 1px solid #666;
   }
+
+  .selectedrow{
+    background-color: #292b2c;
+    color: #f7f7f7;
+    font-weight: bold;
+  }
+
 </style>
 
 <svelte:window
@@ -969,6 +1040,8 @@
     bind:this={tableSpace}
     bind:offsetHeight={__innerOffsetHeight}
     on:scroll={onScroll}
+    on:mousewheel={mousewheel}
+    on:DOMMouseScroll={mousewheel}
     style="height: 100%;"
     role="rowgroup">
 
@@ -1008,11 +1081,16 @@
     <!-- Scrolling seems to perform better when not using a keyed each block -->
     {#each visibleRows as row, i}
       <div
-        class="grid-row"
+        class="grid-row "
         style="top: {getRowTop(row.i, rowHeight)}px; height: {rowHeight}px;
         width: {gridSpaceWidth}px;"
         role="row"
-        aria-rowindex={row.i}>
+        aria-rowindex={row.i}
+        rowNumber={row.i}
+        viewindex={i}
+        on:click={onClickRow}
+
+        >
         {#each columns as column, j}
           <div
             class="grid-cell"
@@ -1028,7 +1106,7 @@
                 {row}
                 on:valueupdate={onCellUpdated} />
             {:else}
-              <div class="cell-default">{row.data[column.dataName] || ''}</div>
+              <div class={`cell-default ${(CurrentSelectedRow===row.i && EnableCursor)?'selectedrow':''}`}  >{row.data[column.dataName] || ''}</div>
             {/if}
           </div>
         {/each}
