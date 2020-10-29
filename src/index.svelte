@@ -9,8 +9,7 @@
 
   let wrapper;
   let tableSpace;
-  let AllowScroll=true
-  let ScrollRows=0
+  let isLoadMore = false;
 
   /**
    * Computes the 'left' value for a grid-cell.
@@ -161,11 +160,9 @@
   export let horizontal = false;
   export let hasMore = true;
   export let EnableCursor = false;
+  export let CurrentSelectedRow = 0
 
-
-  let isLoadMore = false;
-  let CurrentSelectedRow = 0
-  let lastScrollTop =0
+  
 
   onMount(() => {
     editHistory = new EditHistory(rows);
@@ -278,6 +275,8 @@
   }
 
   function onWindowKeyDown(event) {
+
+    
     if (event.ctrlKey) {
       if (event.keyCode === 90) {
         undo();
@@ -289,6 +288,41 @@
         event.preventDefault();
       }
     }
+
+    if([38,40].includes(event.keyCode) && EnableCursor ){ 
+      const Direction=(event.keyCode==40)?1:0
+      moveCursorWithIndexRow(Direction)
+      event.preventDefault()
+    }
+    
+  }
+
+  function moveCursorWithIndexRow(Direction){
+    
+    const last=CurrentSelectedRow
+    if (Direction===1){
+      // upscroll code
+      if(rows.length-1>=CurrentSelectedRow+1){
+          CurrentSelectedRow++
+      }
+
+    } else {
+        // upscroll code
+        if(CurrentSelectedRow-1>=0){
+          CurrentSelectedRow--
+        }
+    }
+    
+    if(last!==CurrentSelectedRow){
+      dispatch("changecursor",{CurrentSelectedRow});
+    }
+
+    if(Direction===1 && CurrentSelectedRow < rows.length){
+      tableSpace.scrollTop+=rowHeight
+    }else {
+      tableSpace.scrollTop-=(rowHeight)
+    }
+
   }
 
   /**
@@ -645,35 +679,8 @@
 
       let Direction = Math.sign(event.deltaY);
       const last=CurrentSelectedRow
-      if(!Direction){
-        Direction=(event.detail>0)?1:0
-      }
-
-      if (Direction===1){
-        // upscroll code
-        if(rows.length-1>=CurrentSelectedRow+1){
-            CurrentSelectedRow++
-        }
-
-      } else {
-          // upscroll code
-          if(CurrentSelectedRow-1>=0){
-            CurrentSelectedRow--
-          }
-      }
-      
-      if(last!==CurrentSelectedRow){
-        dispatch("changecursor",{CurrentSelectedRow});
-      }
-
-      const GridContainer= event.target.offsetParent.offsetParent.offsetParent
-      
-      if(Direction===1 && CurrentSelectedRow < rows.length){
-        GridContainer.scrollTop+=rowHeight
-      }else {
-        GridContainer.scrollTop-=(rowHeight)
-      }
-
+      if(!Direction){ Direction=(event.detail>0)?1:0 }
+      moveCursorWithIndexRow(Direction)
       event.preventDefault()
 
     }
