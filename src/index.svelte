@@ -160,7 +160,8 @@
   export let horizontal = false;
   export let hasMore = true;
   export let EnableCursor = false;
-  export let CurrentSelectedRow = 0
+  export let CurrentSelectedRow = 0;
+  export let Striped=false;
 
   
 
@@ -681,6 +682,7 @@
       const last=CurrentSelectedRow
       if(!Direction){ Direction=(event.detail>0)?1:0 }
       moveCursorWithIndexRow(Direction)
+
       event.preventDefault()
 
     }
@@ -977,9 +979,13 @@
   }
 
   .selectedrow{
-    background-color: #292b2c;
+    background-color: #0275d8;
     color: #f7f7f7;
     font-weight: bold;
+  }
+
+  .stripedRow{
+    background-color: #ccc;
   }
 
 </style>
@@ -1113,7 +1119,7 @@
                 {row}
                 on:valueupdate={onCellUpdated} />
             {:else}
-              <div class={`cell-default ${(CurrentSelectedRow===row.i && EnableCursor)?'selectedrow':''}`}  >{row.data[column.dataName] || ''}</div>
+              <div style={column.style} class={`cell-default ${(row.i%2===0 &&Striped&& !(CurrentSelectedRow===row.i && EnableCursor))?' stripedRow ':''} ${(CurrentSelectedRow===row.i && EnableCursor)?'selectedrow':''}`}  >{row.data[column.dataName] || ''}</div>
             {/if}
           </div>
         {/each}
