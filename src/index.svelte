@@ -1110,7 +1110,7 @@
 		font-weight: 600;
 	}
 
-	.grid-headers .grid-cell {
+	.grid-headers .grid-cell .cell-default {
 		text-align: center;
 		border-bottom: solid 1px #d1d5db;
 		background: #e5e7eb;
@@ -1120,7 +1120,7 @@
 
 	.grid-headers .cell-default:hover,
 	.grid-headers .cell-default.selectedcol {
-		background: #22d3ee;
+		background: #cffafe;
 		color: #222;
 		font-weight: bold;
 	}
@@ -1160,7 +1160,7 @@
 	}
 
 	.selectedrow {
-		background-color: #22d3ee;
+		background-color: #cffafe;
 		color: #222;
 		font-weight: bold;
 	}
