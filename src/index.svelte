@@ -867,7 +867,7 @@
 					{:else}
 						<div
 							class="cell-default"
-							class:col-selected={column.Index === CurrentSelectedColumn}
+							class:selectedcol={column.Index === CurrentSelectedColumn}
 						>
 							{column.display || ''}
 						</div>
@@ -1120,8 +1120,11 @@
 		cursor: pointer;
 	}
 
-	.grid-headers .cell-default:hover {
-		background: #e5e7eb;
+	.grid-headers .cell-default:hover,
+	.grid-headers .cell-default.selectedcol {
+		background: #22d3ee;
+		color: #222;
+		font-weight: bold;
 	}
 
 	.grid-header-row {
@@ -1159,12 +1162,6 @@
 	}
 
 	.selectedrow {
-		background-color: #22d3ee;
-		color: #222;
-		font-weight: bold;
-	}
-
-	.grid-cell.selectedcol {
 		background-color: #22d3ee;
 		color: #222;
 		font-weight: bold;
