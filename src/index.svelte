@@ -161,7 +161,7 @@
 	export let hasMore = true;
 	export let EnableCursor = false;
 	export let CurrentSelectedRow = 0;
-	export let CurrentSelectedColumn = 0;
+	export let CurrentSelectedColumn = -1;
 	export let Striped = false;
 
 	onMount(() => {
@@ -866,7 +866,8 @@
 						<svelte:component this={column.headerComponent} {column} />
 					{:else}
 						<div
-							class="cell-default {column.Index === CurrentSelectedColumn ? ' selectedcol ' : ''}">
+							class:selectedcol={i == CurrentSelectedColumn}
+							class="cell-default">
 							{column.display || ''}
 						</div>
 					{/if}
