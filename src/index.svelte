@@ -1032,8 +1032,8 @@
 		width: 4px;
 		z-index: 5;
 		background: white;
-		border-left: 1px solid #999;
-		border-right: 1px solid #999;
+		border-left: solid 1px #22d3ee;
+		border-right: solid 1px #22d3ee;
 		cursor: ew-resize;
 		transform: translateX(-50%);
 	}
@@ -1108,17 +1108,20 @@
 		width: 100%;
 		top: 0;
 		left: 0;
-		border-bottom: 2px solid black;
+		border-bottom: solid 1px #d1d5db;
+		font-weight: 600;
 	}
 
 	.grid-headers .grid-cell {
 		text-align: center;
-		font-weight: bold;
+		border-bottom: solid 1px #d1d5db;
+		background: #e5e7eb;
+		font-weight: 600;
 		cursor: pointer;
 	}
 
 	.grid-headers .cell-default:hover {
-		background: #eee;
+		background: #e5e7eb;
 	}
 
 	.grid-header-row {
@@ -1132,6 +1135,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
+		border-bottom: solid 1px #d1d5db;
 	}
 
 	.grid-row:not(:last-child) {
@@ -1143,6 +1147,7 @@
 		top: 0;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		border-right: solid 1px #d1d5db;
 	}
 
 	.grid-cell > * {
@@ -1154,13 +1159,13 @@
 	}
 
 	.selectedrow {
-		background-color: #0275d8;
-		color: #f7f7f7;
+		background-color: #22d3ee;
+		color: #222;
 		font-weight: bold;
 	}
 
-	.selectedcol {
-		background-color: rgb(117, 184, 243);
+	.grid-cell.selectedcol {
+		background-color: #22d3ee;
 		color: #222;
 		font-weight: bold;
 	}
