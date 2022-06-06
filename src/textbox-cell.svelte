@@ -35,7 +35,7 @@
     if (prevRow !== row) {
       if (column.activeRow && column.activeRow === rowNumber && textbox) {
         textbox.focus();
-      } else if (textbox === document.activeElement) {
+      } else if (textbox !== document.activeElement) {
         textbox.blur();
       }
       prevRow = row;
