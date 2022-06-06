@@ -325,6 +325,7 @@
 		onColumnResizeEnd(event);
 		onRowAffixEnd(event);
 		onColumnAffixEnd(event);
+		CurrentSelectedColumn = -1;
 	}
 
 	/**
@@ -808,6 +809,7 @@
 			CurrentSelectedRow = parseInt(index, 10);
 			dispatch('changecursor', { CurrentSelectedRow });
 		}
+		CurrentSelectedColumn = -1;
 	};
 </script>
 
