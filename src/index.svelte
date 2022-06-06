@@ -866,9 +866,7 @@
 						<svelte:component this={column.headerComponent} {column} />
 					{:else}
 						<div
-							class="cell-default"
-							class:col-selected={column.Index === CurrentSelectedColumn}
-						>
+							class="cell-default {column.Index === CurrentSelectedColumn ? ' selectedcol ' : ''}">
 							{column.display || ''}
 						</div>
 					{/if}
@@ -1097,7 +1095,6 @@
 		left: 0;
 		background: transparent;
 		pointer-events: none;
-
 		z-index: 3;
 	}
 
@@ -1120,8 +1117,11 @@
 		cursor: pointer;
 	}
 
-	.grid-headers .cell-default:hover {
-		background: #e5e7eb;
+	.grid-headers .cell-default:hover,
+	.grid-headers .cell-default.selectedcol {
+		background: #22d3ee;
+		color: #222;
+		font-weight: bold;
 	}
 
 	.grid-header-row {
@@ -1139,7 +1139,7 @@
 	}
 
 	.grid-row:not(:last-child) {
-		border-bottom: 1px solid #666;
+		border-bottom: 1px solid #d1d5db;
 	}
 
 	.grid-cell {
@@ -1155,16 +1155,10 @@
 	}
 
 	.grid-cell:not(:last-child) {
-		border-right: 1px solid #666;
+		border-right: 1px solid #d1d5db;
 	}
 
 	.selectedrow {
-		background-color: #22d3ee;
-		color: #222;
-		font-weight: bold;
-	}
-
-	.grid-cell.selectedcol {
 		background-color: #22d3ee;
 		color: #222;
 		font-weight: bold;
