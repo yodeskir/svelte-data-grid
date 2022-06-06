@@ -446,7 +446,6 @@
 		if (event.which !== 1) {
 			return;
 		}
-		CurrentSelectedColumn = columnIndex;
 		// if the developer has disabled column reordering, don't begin a reorder
 		if (!allowColumnReordering) {
 			return;
@@ -612,6 +611,17 @@
 		dispatch('columnWidthUpdated');
 		__resizing = false;
 		__columnIndexBeingResized = null;
+	}
+
+	/**
+	 * Mouseup handler for column selected
+	 */
+	function onColumnSelected(event, columnIndex) {
+		if (event.which !== 1) {
+			return;
+		}
+		CurrentSelectedColumn = columnIndex;
+		dispatch('columnSelected', columnIndex);
 	}
 
 	/**
@@ -834,7 +844,9 @@
 			{#each columns as column, i (i)}
 				<div
 					class="grid-cell"
+					class:selectedcol={i == CurrentSelectedColumn}
 					on:mousedown={(event) => onColumnDragStart(event, i)}
+					on:click={(event) => onColumnSelected(event, i)}
 					style="z-index: {getCellZIndex(
 						__affixedColumnIndices,
 						i
@@ -1109,10 +1121,6 @@
 		background: #eee;
 	}
 
-	.grid-headers .col-selected {
-		background: #0275d8;
-	}
-
 	.grid-header-row {
 		position: absolute;
 		overflow: hidden;
@@ -1148,6 +1156,12 @@
 	.selectedrow {
 		background-color: #0275d8;
 		color: #f7f7f7;
+		font-weight: bold;
+	}
+
+	.selectedcol {
+		background-color: rgb(117, 184, 243);
+		color: #222;
 		font-weight: bold;
 	}
 
