@@ -622,7 +622,7 @@
 			return;
 		}
 		CurrentSelectedColumn = columnIndex;
-		dispatch('columnSelected', columnIndex);
+		setTimeout(() => dispatch('columnSelected', columnIndex), 0);
 	}
 
 	/**
