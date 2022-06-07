@@ -447,6 +447,9 @@
 		if (event.which !== 1) {
 			return;
 		}
+		CurrentSelectedColumn = columnIndex;
+		setTimeout(() => dispatch('columnSelected', columnIndex), 0);
+
 		// if the developer has disabled column reordering, don't begin a reorder
 		if (!allowColumnReordering) {
 			return;
@@ -810,7 +813,6 @@
 			CurrentSelectedRow = parseInt(index, 10);
 			dispatch('changecursor', { CurrentSelectedRow });
 		}
-		CurrentSelectedColumn = -1;
 	};
 </script>
 
@@ -849,7 +851,6 @@
 					class="grid-cell"
 					class:selectedcol={i == CurrentSelectedColumn}
 					on:mousedown={(event) => onColumnDragStart(event, i)}
-					on:click={(event) => onColumnSelected(event, i)}
 					style="z-index: {getCellZIndex(
 						__affixedColumnIndices,
 						i
