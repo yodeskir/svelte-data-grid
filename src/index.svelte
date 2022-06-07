@@ -325,7 +325,7 @@
 		onColumnResizeEnd(event);
 		onRowAffixEnd(event);
 		onColumnAffixEnd(event);
-		CurrentSelectedColumn = -1;
+		onColumnSelected(event);
 	}
 
 	/**
@@ -619,6 +619,7 @@
 	 */
 	function onColumnSelected(event, columnIndex) {
 		if (event.which !== 1) {
+			CurrentSelectedColumn = -1;
 			return;
 		}
 		CurrentSelectedColumn = columnIndex;
@@ -869,7 +870,8 @@
 					{:else}
 						<div
 							class:selectedcol={i == CurrentSelectedColumn}
-							class="cell-default">
+							class="cell-default"
+						>
 							{column.display || ''}
 						</div>
 					{/if}
