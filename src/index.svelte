@@ -325,7 +325,6 @@
 		onColumnResizeEnd(event);
 		onRowAffixEnd(event);
 		onColumnAffixEnd(event);
-		onColumnSelected(event);
 	}
 
 	/**
